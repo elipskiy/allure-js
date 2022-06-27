@@ -1,3 +1,4 @@
+import os from "os";
 import { World as CucumberWorld, Formatter } from "@cucumber/cucumber";
 import { IFormatterOptions } from "@cucumber/cucumber/lib/formatter";
 import TestCaseHookDefinition from "@cucumber/cucumber/lib/models/test_case_hook_definition";
@@ -144,10 +145,6 @@ export class CucumberJSAllureFormatter extends Formatter {
   private onPickle(data: messages.Pickle): void {
     this.pickleMap.set(data.id, data);
     data.steps.forEach((ps) => this.pickleStepMap.set(ps.id, ps));
-
-    // if (data.tags?.length) {
-    //   this.currentTest.
-    // }
   }
 
   private onTestCase(data: messages.TestCase): void {
@@ -178,6 +175,7 @@ export class CucumberJSAllureFormatter extends Formatter {
     this.currentTest = new AllureTest(this.allureRuntime, Date.now());
     this.currentTest.name = pickle.name;
 
+    this.currentTest?.addLabel(LabelName.HOST, os.hostname());
     this.currentTest?.addLabel(LabelName.LANGUAGE, "javascript");
     this.currentTest?.addLabel(LabelName.FRAMEWORK, "cucumberjs");
 
