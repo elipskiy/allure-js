@@ -154,6 +154,7 @@ export class CucumberJSAllureFormatter extends Formatter {
   }
 
   private onTestCaseStarted(data: messages.TestCaseStarted): void {
+    const { ALLURE_HOST_NAME, ALLURE_THREAD_NAME } = process.env;
     const testCase = this.testCaseMap.get(data.testCaseId);
     if (!testCase) {
       // eslint-disable-next-line no-console
@@ -176,8 +177,8 @@ export class CucumberJSAllureFormatter extends Formatter {
     this.currentTest = new AllureTest(this.allureRuntime, Date.now());
     this.currentTest.name = pickle.name;
 
-    this.currentTest?.addLabel(LabelName.HOST, os.hostname());
-    this.currentTest?.addLabel(LabelName.THREAD, process.getuid().toString());
+    this.currentTest?.addLabel(LabelName.HOST, ALLURE_HOST_NAME || os.hostname());
+    this.currentTest?.addLabel(LabelName.THREAD, ALLURE_THREAD_NAME || process.getuid().toString());
     this.currentTest?.addLabel(LabelName.LANGUAGE, "javascript");
     this.currentTest?.addLabel(LabelName.FRAMEWORK, "cucumberjs");
 
